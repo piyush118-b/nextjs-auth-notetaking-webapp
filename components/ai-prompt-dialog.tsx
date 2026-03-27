@@ -7,7 +7,7 @@ import { Textarea } from "./ui/textarea";
 import { Loader2, Sparkles } from "lucide-react";
 
 interface AIPromptDialogProps {
-  onGenerate: (text: string) => void;
+  onGenerate: (text: string, originalPrompt: string) => void;
 }
 
 export function AIPromptDialog({ onGenerate }: AIPromptDialogProps) {
@@ -19,12 +19,12 @@ export function AIPromptDialog({ onGenerate }: AIPromptDialogProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const trimmedPrompt = prompt.trim();
-    
+
     if (!trimmedPrompt) {
       setError('Please enter a prompt');
       return;
     }
-    
+
     if (trimmedPrompt.length < 5) {
       setError('Please enter a more detailed prompt (at least 5 characters)');
       return;
@@ -32,14 +32,14 @@ export function AIPromptDialog({ onGenerate }: AIPromptDialogProps) {
 
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch("/api/ai-generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           prompt: trimmedPrompt,
           format: 'html' // Request HTML-formatted response
         }),
@@ -59,21 +59,8 @@ export function AIPromptDialog({ onGenerate }: AIPromptDialogProps) {
       if (!data.text) {
         throw new Error('No content was generated');
       }
-      
-      // Clean up the response while preserving newlines
-      let formattedText = data.text
-        .replace(/<\/?p>/g, '\n') // Convert paragraphs to newlines
-        .replace(/<br\s*\/?>/g, '\n') // Convert line breaks
-        .replace(/<[^>]+>/g, '') // Remove any remaining HTML tags
-        .replace(/\n{3,}/g, '\n\n') // Normalize multiple newlines
-        .trim();
-        
-      // Ensure we have proper line breaks between list items
-      formattedText = formattedText
-        .replace(/(\d+\.|[-*+])\s*/g, '\n$&') // Add newline before list items
-        .replace(/\n{3,}/g, '\n\n') // Normalize again after list processing
-      
-      onGenerate(formattedText);
+
+      onGenerate(data.text, trimmedPrompt);
       setIsOpen(false);
       setPrompt("");
     } catch (err) {
@@ -133,9 +120,48 @@ export function AIPromptDialog({ onGenerate }: AIPromptDialogProps) {
               }}
             />
             {error && <p className="text-sm text-destructive">{error}</p>}
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mb-4">
               Press ⌘+Enter to generate
             </p>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="text-xs h-7 rounded-md"
+                onClick={() => setPrompt(`Summarize the following text concisely:\n\n${prompt}`)}
+              >
+                Summarize
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="text-xs h-7 rounded-md"
+                onClick={() => setPrompt(`Fix all grammar and spelling errors in the following text, keeping the original meaning intact:\n\n${prompt}`)}
+              >
+                Fix Grammar
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="text-xs h-7 rounded-md"
+                onClick={() => setPrompt(`Rewrite the following text to sound more professional and polished:\n\n${prompt}`)}
+              >
+                Improve Tone
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="text-xs h-7 rounded-md"
+                onClick={() => setPrompt(`Continue writing the following text organically. Do not repeat what is already written. Just add the next logical paragraph:\n\n${prompt}`)}
+              >
+                Auto-Complete
+              </Button>
+            </div>
           </div>
           <div className="flex justify-end space-x-2">
             <Button

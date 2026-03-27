@@ -72,6 +72,7 @@ export const notes = pgTable("notes", {
     id: text('id').primaryKey().default(sql`gen_random_uuid()`),
     title: text('title').notNull(),
     content: jsonb('content').notNull(),
+    isShared: boolean('is_shared').default(false).notNull(),
     notebookId: text('notebook_id').notNull().references(() => notebooks.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at').$defaultFn(() => /* @__PURE__ */ new Date()),
     updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date())

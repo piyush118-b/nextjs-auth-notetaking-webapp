@@ -28,6 +28,31 @@ export const getNoteById = async (id: string) => {
     }
 };
 
+import { and } from "drizzle-orm";
+
+export const getSharedNoteById = async (id: string) => {
+    try {
+        const safeNote = await db.query.notes.findFirst({
+            where: and(eq(notes.id, id), eq(notes.isShared, true)),
+            with: {
+                notebook: {
+                    with: {
+                        user: true
+                    }
+                }
+            }
+        });
+
+        if (!safeNote) {
+            return { success: false, message: "Note not found or not public" };
+        }
+
+        return { success: true, note: safeNote };
+    } catch {
+        return { success: false, message: "Failed to load shared note" };
+    }
+};
+
 export const updateNote = async (id: string, values: Partial<InsertNote>) => {
     try {
         await db.update(notes).set(values).where(eq(notes.id, id));

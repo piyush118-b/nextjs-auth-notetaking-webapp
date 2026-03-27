@@ -41,6 +41,7 @@
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.539.0",
+    "marked": "^17.0.5",
     "motion": "^12.23.12",
     "next": "15.4.6",
     "next-auth": "^4.24.11",

@@ -27,6 +27,7 @@ export default async function NotePage({ params }: { params: Params }) {
       <RichTextEditor
         content={note?.content as JSONContent[]}
         noteId={noteId}
+        isShared={note?.isShared}
       />
     </PageWrapper>
   );
