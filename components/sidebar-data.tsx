@@ -16,13 +16,20 @@ import {
 import { ChevronRight, File } from "lucide-react";
 import { useQueryState } from "nuqs";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider
+} from "@/components/ui/tooltip";
+
 interface SidebarDataProps {
   data: {
     navMain: {
       id: string;
       title: string;
       url: string;
-      items: { title: string; url: string }[];
+      items: { title: string; url: string; preview?: string }[];
     }[];
   };
 }
@@ -43,7 +50,7 @@ export function SidebarData({ data }: SidebarDataProps) {
   });
 
   return (
-    <>
+    <TooltipProvider delayDuration={400}>
       {filteredData.map((item) => (
         <Collapsible
           key={item.id} // ✅ unique id
@@ -75,15 +82,32 @@ export function SidebarData({ data }: SidebarDataProps) {
                 <SidebarMenu>
                   {item.items.map((note) => (
                     <SidebarMenuItem key={note.url}>
-                      <SidebarMenuButton
-                        asChild
-                        className="flex items-center gap-2 px-3 py-1.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors duration-150 rounded-md"
-                      >
-                        <a href={note.url}>
-                          <File className="h-4 w-4 text-sidebar-accent-foreground" />
-                          {note.title}
-                        </a>
-                      </SidebarMenuButton>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuButton
+                            asChild
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors duration-150 rounded-md"
+                          >
+                            <a href={note.url}>
+                              <File className="h-4 w-4 text-sidebar-accent-foreground" />
+                              {note.title}
+                            </a>
+                          </SidebarMenuButton>
+                        </TooltipTrigger>
+                        {note.preview && (
+                          <TooltipContent
+                            side="right"
+                            align="start"
+                            sideOffset={8}
+                            className="max-w-[280px] bg-sidebar border-sidebar-border text-sidebar-foreground shadow-xl rounded-xl p-3 z-50 whitespace-pre-wrap leading-relaxed ring-1 ring-border/10"
+                          >
+                            <div className="flex flex-col gap-1.5">
+                              <span className="font-semibold text-xs uppercase tracking-wider text-sidebar-primary-foreground/80">Preview</span>
+                              <p className="text-sm opacity-90">{note.preview}</p>
+                            </div>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
@@ -92,6 +116,6 @@ export function SidebarData({ data }: SidebarDataProps) {
           </SidebarGroup>
         </Collapsible>
       ))}
-    </>
+    </TooltipProvider>
   );
 }

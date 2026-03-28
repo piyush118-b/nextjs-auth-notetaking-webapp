@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import { SearchForm } from "@/components/search-form";
 import {
@@ -11,6 +12,34 @@ import Image from "next/image";
 import { SidebarData } from "./sidebar-data";
 import Link from "next/link";
 
+function extractTextPreview(jsonContent: any, maxLen = 120): string {
+  if (!jsonContent) return "Empty note";
+  let text = "";
+
+  function traverse(node: any) {
+    if (!node || typeof node !== "object") return;
+    if (text.length > maxLen) return;
+    if (node.type === "text" && node.text) {
+      text += node.text;
+    }
+    if (node.type === "paragraph" || node.type === "heading" || node.type === "listItem") {
+      text += " ";
+    }
+    if (node.content && Array.isArray(node.content)) {
+      node.content.forEach(traverse);
+    }
+  }
+
+  if (Array.isArray(jsonContent)) {
+    jsonContent.forEach(traverse);
+  } else {
+    traverse(jsonContent);
+  }
+
+  const trimmed = text.trim().replace(/\s+/g, " ");
+  return trimmed ? (trimmed.length > maxLen ? trimmed.substring(0, maxLen) + "..." : trimmed) : "Empty note";
+}
+
 export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
@@ -20,13 +49,14 @@ export async function AppSidebar({
     versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
     navMain: [
       ...(notebooks.notebooks?.map((notebook) => ({
-        id: notebook.id, // ✅ added id
-        title: notebook.name,
-        url: `/dashboard/notebook/${notebook.id}`, // fixed path
-        items: notebook.notes.map((note) => ({
-          title: note.title,
+        id: notebook.id,
+        title: notebook.name || "Untitled Notebook",
+        url: `/dashboard/notebook/${notebook.id}`,
+        items: notebook.notes?.map((note) => ({
+          title: note.title || "Untitled Note",
           url: `/dashboard/notebook/${notebook.id}/note/${note.id}`,
-        })),
+          preview: extractTextPreview(note.content),
+        })) ?? [],
       })) ?? []),
     ],
   };

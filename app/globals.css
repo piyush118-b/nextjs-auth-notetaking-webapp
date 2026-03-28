@@ -73,7 +73,7 @@
   --sidebar-foreground: oklch(0.95 0.02 80);
   --sidebar-primary: oklch(0.55 0.15 45);
   --sidebar-primary-foreground: oklch(0.98 0.01 80);
-  --sidebar-accent: oklch(0.25 0.02 60);
+  --sidebar-accent: oklch(0.35 0.03 60);
   --sidebar-accent-foreground: oklch(0.98 0.01 80);
   --sidebar-border: oklch(0.22 0.02 60);
   --sidebar-ring: oklch(0.55 0.15 45);
@@ -126,7 +126,7 @@
   --sidebar-foreground: oklch(0.95 0.02 80);
   --sidebar-primary: oklch(0.6 0.15 45);
   --sidebar-primary-foreground: oklch(0.95 0.02 80);
-  --sidebar-accent: oklch(0.18 0.02 60);
+  --sidebar-accent: oklch(0.28 0.03 60);
   --sidebar-accent-foreground: oklch(0.98 0.01 80);
   --sidebar-border: oklch(0.18 0.02 60);
   --sidebar-ring: oklch(0.6 0.15 45);
@@ -213,6 +213,130 @@
 
 .ProseMirror:focus {
   outline: none;
+}
+
+/* --- Editor Content Refinement --- */
+.ProseMirror {
+  word-break: break-word;
+}
+
+.ProseMirror p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Syntax Highlighting (lowlight) Styling */
+.ProseMirror pre {
+  background: oklch(0.2 0.02 60);
+  /* Deep dark background */
+  color: oklch(0.95 0.02 80);
+  font-family: var(--font-mono);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid oklch(0.3 0.02 60);
+  line-height: 1.6;
+  transition: all 0.2s ease;
+}
+
+.ProseMirror pre:hover {
+  border-color: oklch(0.4 0.02 60);
+}
+
+.ProseMirror pre:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.dark .ProseMirror pre {
+  background: oklch(0.12 0.02 60);
+  border-color: oklch(0.18 0.02 60);
+}
+
+.ProseMirror code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.9rem;
+}
+
+/* Highlight.js Color Palette - Elegant & Saturated */
+.hljs-comment,
+.hljs-quote {
+  color: oklch(0.5 0.05 60);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-addition {
+  color: oklch(0.7 0.2 300);
+  /* Purple */
+}
+
+.hljs-number,
+.hljs-string,
+.hljs-meta .hljs-meta-string,
+.hljs-literal,
+.hljs-doctag,
+.hljs-regexp {
+  color: oklch(0.75 0.15 140);
+  /* Green/Tea */
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: oklch(0.7 0.15 45);
+  /* Orange/Coral */
+}
+
+.hljs-attribute,
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-class .hljs-title,
+.hljs-type {
+  color: oklch(0.8 0.1 80);
+  /* Yellow */
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-meta .hljs-keyword,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-link {
+  color: oklch(0.7 0.15 200);
+  /* Blue */
+}
+
+.hljs-built_in,
+.hljs-deletion {
+  color: oklch(0.65 0.2 20);
+  /* Red */
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+/* Placeholder for Tiptap (if installed later) */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--muted-foreground);
+  pointer-events: none;
+  height: 0;
 }
 
 @media print {

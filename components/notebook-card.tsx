@@ -88,7 +88,7 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 className="text-destructive focus:text-destructive"
                 onSelect={(e) => {
                   e.preventDefault();
@@ -109,7 +109,7 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
         </div>
       </CardContent>
       <CardFooter className="pt-0">
-        <Link 
+        <Link
           href={`/dashboard/notebook/${notebook.id}`}
           className="group/button flex w-full items-center justify-between rounded-md p-2 text-sm font-medium text-primary transition-colors hover:bg-accent"
         >
@@ -123,13 +123,13 @@ export default function NotebookCard({ notebook }: NotebookCardProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete notebook?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete "{notebook.name}" and all its contents.
+              This will permanently delete &quot;{notebook.name}&quot; and all its contents.
               This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
