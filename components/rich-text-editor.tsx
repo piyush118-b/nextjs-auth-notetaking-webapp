@@ -7,7 +7,7 @@ import {
   useEditorState,
   type JSONContent,
 } from "@tiptap/react";
-// @ts-ignore - Some versions of Tiptap 3 have these in sub-modules
+// @ts-expect-error - Some versions of Tiptap 3 have these in sub-modules
 import { BubbleMenu, FloatingMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Document from "@tiptap/extension-document";
@@ -42,12 +42,9 @@ import {
   Italic,
   Strikethrough,
   Code,
-  Underline,
-  Link,
   List,
   ListOrdered,
   ChevronDown,
-  Plus,
   Share,
   Download,
   Copy,
